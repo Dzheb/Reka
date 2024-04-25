@@ -14,5 +14,6 @@ Route::delete(
     ->name('delete-task');
 
 Route::post('/task', [TaskController::class, 'submitTask'])->middleware('auth')->name('post-task');
+Route::post('/task/{id}', [TaskController::class, 'updateTask'])->middleware('auth')->name('put-task');
 
 require __DIR__.'/auth.php';

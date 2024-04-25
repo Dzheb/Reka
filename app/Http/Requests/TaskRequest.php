@@ -25,8 +25,7 @@ class TaskRequest extends FormRequest
     {
         return
             [
-                'lid' => 'required',
-                'name' => 'required',
+              
             ];
      }
      public function attributes()

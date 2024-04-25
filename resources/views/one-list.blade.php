@@ -3,7 +3,7 @@
 {{$data->name}}@endsection
 @section('content')
 <div class="d-flex flex-column flex-lg-row justify-content-between" style="gap: 10px">
-    <h1 id='list' data-id='{{$data->id}}' data-user='{{$user->id}}'>Список: {{$data->name}}</h1>
+    <h1 id='list' data-id='{{$data->id}}' data-user='{{$user->id}}'>Список : {{$data->name}}</h1>
     <form action="{{route('list-delete', $data->id)}}" method="POST">
         @csrf
         @method('DELETE')
@@ -15,13 +15,19 @@
 <h5 class="container my-2">Задачи : </h5>
 @foreach($tasks as $task)
 <div class="alert alert-info align-items-center">
-    <h5 class="mb-3" style="word-wrap: break-word; width:100%;">"{{$task->name}}"<button id="{{$task->id}}" class="btn btn-warning delete_task float-end" data-bs-toggle="modal" data-bs-target="#taskDelete">Удалить</button></h5>
+    <h5 class="mb-3" style="word-wrap: break-word; width:100%;">"{{$task->name}}"<button id="{{$task->id}}" class="btn btn-warning mx-3 delete_task float-end" data-bs-toggle="modal" data-bs-target="#taskDelete">Удалить</button>
+        <button id="{{$task->id}}" data-task="{{$task}}" class="btn btn-warning update_task mx-3 float-end" data-bs-toggle="modal" data-bs-target="#taskModal">Изменить</button>
+    </h5>
     @if($task->jpg)
     <img class="photo" data-bs-toggle="modal" data-bs-target="#picModal" src="{{ asset($task->jpg) }}" alt="photo" width="150" height="150">
     @endif
-    <h6 class="mx-5">Время: {{$task->created_at}}</h6>
+    <h6 class="my-3">Время: {{$task->created_at}}</h6>
+    <h6>Тэги: </h6>
+    @if($task->tags != 'null')
 
-    <button id="{{$task->tags}}" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#tag">{{$task->tags}}</button>
+    <button id="{{$task->tags}}" class="btn btn-warning tags" data-bs-toggle="modal" data-bs-target="#tag">{{$task->tags}}</button>
+
+    @endif
 </div>
 @endforeach
 @endif
@@ -29,23 +35,37 @@
 
 </div>
 <script>
-    // save task
-    const btnDeleteConfirm = document.querySelector('.delete_confirmation');
+    // кнопки
     const btnDelete = document.querySelectorAll('.delete_task');
+    const btnDeleteConfirm = document.querySelector('.delete_confirmation');
+    const btnUpdate = document.querySelectorAll('.update_task');
+    // передача id на каждую кнопку удаления задачи
     btnDelete.forEach((item) => {
         item.addEventListener('click', function(e) {
             btnDeleteConfirm.setAttribute("id", this.id);
         })
     });
+    // чтение данных из dataset в форму
+    btnUpdate.forEach((item) => {
+        item.addEventListener('click', function(e) {
+            const task_cur = JSON.parse(this.dataset.task);
+            document.forms.formTask.id.value = task_cur.id;
+            document.forms.formTask.lid.value = task_cur.lid;
+            document.forms.formTask.task_content.value = task_cur.name;
+            document.forms.formTask.tags.value = task_cur.tags;
+
+        })
+    });
+    // нажатие кнопки сохранить
     const btnSave = document.querySelector('.save_task');
     btnSave.addEventListener('click', function(e) {
         document.forms.formTask.lid.value = document.getElementById('list').dataset.id;
         // ajax request
-        if (formTask.task_content.value != '' && formTask.lid.value)
+        if (document.forms.formTask.task_content.value != '' && document.forms.formTask.lid.value)
             sendTaskAjax();
         else alert("Название задачи не должно быть пустым")
     });
-
+// запись  в базу задачи
     function sendTaskAjax() {
         $.ajaxSetup({
             headers: {
@@ -53,26 +73,54 @@
             }
         });
         //
-        const lid = formTask.lid.value;
-        const task_content = formTask.task_content.value;
-        let formData = new FormData(formTask);
-        formData.append('tags', JSON.stringify(formTask.tags.value));
-        if (checkImgAjax(formTask.task_pic)) {
-            formData.append('file', formTask.task_pic.files[0]);
-        }
-        $.ajax({
-            type: "POST",
-            url: "{{ route('post-task') }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(data) {
-                window.location.href = "/list/" + lid + "/view";
-                document.forms.formTask.lid.value = '';
-                document.forms.formTask.name.value = '';
+        let lid = '';
+        let id = '';
+        lid = document.forms.formTask.lid.value;
+        id = document.forms.formTask.id.value;
+        const task_content = document.forms.formTask.task_content.value;
+        const formData = new FormData(document.forms.formTask);
+        formData.append('tags', document.forms.formTask.tags.value);
+        if (document.forms.formTask.task_pic.files[0] != null) {
+            if (checkImgAjax(document.forms.formTask.task_pic)) {
+                formData.append('file', document.forms.formTask.task_pic.files[0]);
             }
-        });
+        }
 
+        // если нет id то сохранить
+        if (id == '') {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('post-task') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    window.location.href = "/list/" + lid + "/view";
+                    document.forms.formTask.lid.value = '';
+                    document.forms.formTask.tags.value = '';
+                    document.forms.formTask.task_content.value = '';
+                }
+            });
+            // если нет то update
+        } else {
+            // update
+            let url = "{{ route('put-task',':id') }}";
+            url = url.replace(':id', id);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    window.location.href = "/list/" + lid + "/view";
+                    document.forms.formTask.lid.value = '';
+                    document.forms.formTask.id.value = '';
+                    document.forms.formTask.tags.value = '';
+                    document.forms.formTask.task_content.value = '';
+                }
+            });
+        }
     }
     // delete task
     btnDeleteConfirm.addEventListener('click', function(e) {
@@ -101,7 +149,7 @@
     }
     // проверка загружаемого файла
     function checkImgAjax(file) {
-        if (file != '') {
+        if (file.files[0].name != '') {
             // проверка на тип и размер файла
             if (
                 file.files[0].type == 'image/png' ||
@@ -126,6 +174,14 @@
     $(".photo").on("click", function(event) {
         $('.photo_modal').attr("src", this.src);
     });
+
+    function formDataJSON(formData) {
+        var object = {};
+        formData.forEach(function(value, key) {
+            object[key] = value;
+        });
+        return JSON.stringify(object);
+    }
 </script>
 @endsection
 @section('aside')
@@ -148,6 +204,7 @@
                 <form action="#" enctype="multipart/form-data" name="formTask" class="row md-12 task_input">
                     @csrf
                     <input type="hidden" id="lid" name="lid" value="" />
+                    <input type="hidden" id="id" name="id" value="" />
 
                     <div class="col-md-12">
                         <label for="task">Описание задачи:</label>
@@ -196,7 +253,7 @@
         </div>
     </div>
 </div>
-<!--  -->
+<!-- Task delete -->
 <div class="modal fade" id="taskDelete" tabindex="-1" aria-labelledby="taskDeleteLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

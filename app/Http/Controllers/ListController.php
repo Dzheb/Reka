@@ -13,18 +13,12 @@ class ListController extends Controller
 {
     public function saveNewList(ListRequest $req)
     {
-        // if (!CheckList::where('name', '=', $req->name)->firstOrFail()) {
             $list = new CheckList();
             $list->name = $req->input('name');
             $list->uid = Auth::user()->id;
             $list->save();
             $data = CheckList::latest()->paginate(2);
             return view('lists', compact('data'))->with('success', 'Лист был добавлен');
-        // } else {
-
-        //     $data = CheckList::latest()->paginate(2);
-        //     return view('lists', compact('data'))->with('success', 'Лист не был добавлен, лист с таким названием существует');
-        // }
     }
     public function updateListSubmit($id, ListRequest $req)
     {
@@ -40,12 +34,10 @@ class ListController extends Controller
     }
     public function showOneList($id)
     {
-        $uid =  Auth::user()->id;
         $tasks = Task::where('lid', $id)->get();
-
-        return view('one-list', ['data' => CheckList::find($id), 'tasks' => $tasks, 'user' => auth()->user()]);
+        return view('one-list', ['data' => CheckList::find($id), 'tasks' => $tasks,'user' => auth()->user()]);
     }
- 
+
     public function deleteList($id)
     {
         CheckList::find($id)->delete();

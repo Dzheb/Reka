@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskRequest;
 use Illuminate\Http\Request;
 use App\Models\Task;
 
@@ -25,6 +24,23 @@ class TaskController extends Controller
         $task->save();
         return response()->json([
             "status" => "Задача добавлена"
+        ]);
+    }
+    //
+    public function updateTask($id,Request $req)
+    {
+        $task = Task::find($id);
+        $task->lid = $req->lid;
+        $task->name = $req->task_content;
+        if(!empty($_FILES["file"]) ) {
+            if(img_save()){
+                $task->jpg = '/images/'.$_FILES["file"]["name"];
+            }
+        }
+        $task->tags = $req->tags;
+        $task->save();
+        return response()->json([
+            "status" => "Задача обновлена",
         ]);
     }
     //
