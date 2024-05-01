@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ListRequest;
 use App\Models\CheckList;
-use App\Models\Comment;
-use App\Models\Company;
 use App\Models\Task;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 
 class ListController extends Controller
@@ -29,13 +28,18 @@ class ListController extends Controller
     public function allLists()
     {
         $user = Auth::user();
-        $data = CheckList::latest()->paginate(2);
+        $data = CheckList::orderBy('id')->latest()->paginate(2);
         return view('lists', compact('data'));
     }
     public function showOneList($id)
     {
-        $tasks = Task::where('lid', $id)->get();
-        return view('one-list', ['data' => CheckList::find($id), 'tasks' => $tasks,'user' => auth()->user()]);
+        $filter = request()->all();
+        $tasks = Task::where('lid', $id)->filterBy(request()->all())->get();
+        // $tasks = Task::where('lid', $id)->with(['tags'])->filterBy(request()->all())->get();
+        $tags = Tag::all();
+
+        // return App\Models\Post::with(['tags'])->filterBy(request()->all())->get();
+        return view('one-list', ['data' => CheckList::find($id), 'tasks' => $tasks, 'tags' => $tags, 'user' => auth()->user(),'filter'=>$filter]);
     }
 
     public function deleteList($id)

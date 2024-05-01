@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\Tag;
 
 class TaskController extends Controller
 {
@@ -14,8 +15,6 @@ class TaskController extends Controller
         $task->lid = $input['lid'];
         $task->name = $input['task_content'];
         $task->jpg = NULL;
-        $task->tags = $input['tags'];
-
         if(!empty($_FILES["file"]) ) {
             if(img_save()){
                 $task->jpg = '/images/'.$_FILES["file"]["name"];
@@ -27,6 +26,20 @@ class TaskController extends Controller
         ]);
     }
     //
+    public function submitTag(Request $req)
+    {
+        $input = $req->all();
+        $tag = new Tag();
+        $tag->name = $input['tag_content'];
+        $task = Task::find($input['task_id']);
+        $tag->save();
+        $tag->tasks()->attach($task);
+        return response()->json([
+            "status" => "Задача добавлена"
+        ]);
+    }
+
+    //
     public function updateTask($id,Request $req)
     {
         $task = Task::find($id);
@@ -37,7 +50,6 @@ class TaskController extends Controller
                 $task->jpg = '/images/'.$_FILES["file"]["name"];
             }
         }
-        $task->tags = $req->tags;
         $task->save();
         return response()->json([
             "status" => "Задача обновлена",

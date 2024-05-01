@@ -1477,7 +1477,8 @@ select {
     display:flex;
     justify-content: center;
     flex-direction:column;
-    margin: 0 5vw 0 0;
+    margin: 0 3vw 0 0;
+    width:30vw;
 }
 .task_input{
     display: flex;
