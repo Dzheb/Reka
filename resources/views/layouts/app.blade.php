@@ -161,15 +161,12 @@
                     processData: false,
                     contentType: false,
                     success: function(data) {
-                        alert(JSON.stringify(data))
-                //         window.location.href = "/list/" + lid + "/view";
-                location.reload();
+                       location.reload();
                         document.forms.formTag.task_id.value = '';
                         document.forms.formTag.tag_content.value = '';
                     }
                 });
                 // если нет то update
-
         }
         // delete task
         btnDeleteConfirm.addEventListener('click', function(e) {
@@ -192,7 +189,6 @@
                 dataType: 'json',
                 success: function(data) {
                     window.location.href = "/list/" + document.getElementById('list').dataset.id + "/view";
-
                 }
             });
         }
@@ -254,6 +250,45 @@
                     window.location.replace((window.location.href + '?tag=' + this.textContent));
             })
         });
+        // передача id задачи на кнопку тэга
+        const btnTagDelete = document.querySelectorAll('.tag');
+        const btnTagDeleteConfirmation = document.querySelector('.delete_tag_confirmation');
+        // передача id на каждую кнопку удаления тэга
+        btnTagDelete.forEach((item) => {
+            item.addEventListener('click', function(e) {
+                btnTagDeleteConfirmation.setAttribute("id", this.id);
+                btnTagDeleteConfirmation.setAttribute('data-task',this.dataset.task);
+            })
+        });
+        //
+         // delete tag
+         btnTagDeleteConfirmation.addEventListener('click', function(e) {
+            // ajax request
+            let url = "{{ route('delete-tag',[':id',':task']) }}";
+            url = url.replace(':id',this.id);
+            url = url.replace(':task', this.dataset.task);
+            deleteTagAjax(url);
+        });
+
+        function deleteTagAjax(url) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            //
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                dataType: 'json',
+                success: function(data) {
+                    alert(JSON.stringify(data))
+                    window.location.href = "/list/" + document.getElementById('list').dataset.id + "/view";
+
+                }
+            });
+        }
+//
     </script>
 </body>
 

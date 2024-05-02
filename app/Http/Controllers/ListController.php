@@ -35,10 +35,7 @@ class ListController extends Controller
     {
         $filter = request()->all();
         $tasks = Task::where('lid', $id)->filterBy(request()->all())->get();
-        // $tasks = Task::where('lid', $id)->with(['tags'])->filterBy(request()->all())->get();
         $tags = Tag::all();
-
-        // return App\Models\Post::with(['tags'])->filterBy(request()->all())->get();
         return view('one-list', ['data' => CheckList::find($id), 'tasks' => $tasks, 'tags' => $tags, 'user' => auth()->user(),'filter'=>$filter]);
     }
 

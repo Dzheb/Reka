@@ -26,7 +26,9 @@
     <!--  -->
     @if (count($task->tags) > 0)
     @foreach($task->tags as $tag)
-    <button id="{{$tag->id}}" class="btn btn-warning mx-3 tag" data-bs-toggle="modal" data-bs-target="#tagDelete">{{$tag->name}}</button>
+    <button id="{{$tag->id}}" class="btn btn-warning mx-3 tag"
+    data-task="{{$task->id}}"
+    data-bs-toggle="modal" data-bs-target="#tagDelete">{{$tag->name}}</button>
     @endforeach
     @endif
     <button data-task="{{$task->id}}" class="btn btn-danger add-tag"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16"
@@ -154,6 +156,29 @@
                     Закрыть
                 </button>
                 <button class="btn btn-warning delete_confirmation">
+                    Удалить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal tag delete -->
+<div class="modal fade" id="tagDelete" tabindex="-1" aria-labelledby="tagDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-right">
+                <h1 class="modal-title fs-5" id="tagDeleteLabel"></h1>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <h3 class="modal-title fs-5  ">Удалить тэг?</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary"
+                data-bs-dismiss="modal">
+                    Закрыть
+                </button>
+                <button class="btn btn-warning delete_tag_confirmation"       data-task="">
                     Удалить
                 </button>
             </div>

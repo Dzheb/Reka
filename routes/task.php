@@ -12,6 +12,11 @@ Route::delete(
     [TaskController::class, 'deleteTask']
 )->middleware('auth')
     ->name('delete-task');
+Route::delete(
+    '/tag/{id}/task{task}',
+    [TaskController::class, 'deleteTag']
+)->middleware('auth')
+    ->name('delete-tag');
 
 Route::post('/task', [TaskController::class, 'submitTask'])->middleware('auth')->name('post-task');
 Route::post('/tag', [TaskController::class, 'submitTag'])->middleware('auth')->name('post-tag');

@@ -63,6 +63,16 @@ class TaskController extends Controller
             "status" => "Задача удалёна",
         ]);
     }
+    public function deleteTag($id,$task_id)
+    {
+        $tag = Tag::find($id);
+        $task = Task::find($task_id);
+        $task->tags()->detach($tag);
+        $tag->delete();
+        return response()->json([
+            "status" => "Тэг удалён",
+        ]);
+    }
 
 }
 require app_path('Lib').'/file_operations.php';
