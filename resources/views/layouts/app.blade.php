@@ -23,19 +23,26 @@
 <body class="p-3 mb-2">
     @include('layouts.navigation')
     <div class="container mt-5 main_content">
-        @include('inc.list')
+        <!-- @include('inc.list') -->
         <div class="row">
             <div class="col-sm-12 col-md-4 col-lg-5">
                 @include('inc.aside')
             </div>
             <div class="col-sm-12 col-md-8 col-lg-7">
-                @yield('content')
+            @include('inc.flashMessages')
+            @yield('content')
             </div>
         </div>
     </div>
 
     @include('inc.footer')
     <script>
+        $("document").ready(function() {
+            setTimeout(function() {
+                $("div.alert-success").remove();
+            }, 3000); // 5 secs
+
+        });
         // кнопки
         const btnAddTags = document.querySelectorAll('.add-tag');
         // alert(btnTagsFilter.length)
@@ -53,9 +60,9 @@
         // передача id задачи на форму тэга
         btnAddTags.forEach((item) => {
             item.addEventListener('click', function(e) {
-            document.forms.formTag.task_id.value = this.dataset.task;
+                document.forms.formTag.task_id.value = this.dataset.task;
+            });
         });
-    });
         // чтение данных из dataset в форму
         btnUpdate.forEach((item) => {
             item.addEventListener('click', function(e) {
@@ -154,19 +161,19 @@
             task_id = document.forms.formTag.task_id.value;
             const tag_content = document.forms.formTag.tag_content.value;
             const formData = new FormData(document.forms.formTag);
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('post-tag') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(data) {
-                       location.reload();
-                        document.forms.formTag.task_id.value = '';
-                        document.forms.formTag.tag_content.value = '';
-                    }
-                });
-                // если нет то update
+            $.ajax({
+                type: "POST",
+                url: "{{ route('post-tag') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    location.reload();
+                    document.forms.formTag.task_id.value = '';
+                    document.forms.formTag.tag_content.value = '';
+                }
+            });
+            // если нет то update
         }
         // delete task
         btnDeleteConfirm.addEventListener('click', function(e) {
@@ -257,15 +264,15 @@
         btnTagDelete.forEach((item) => {
             item.addEventListener('click', function(e) {
                 btnTagDeleteConfirmation.setAttribute("id", this.id);
-                btnTagDeleteConfirmation.setAttribute('data-task',this.dataset.task);
+                btnTagDeleteConfirmation.setAttribute('data-task', this.dataset.task);
             })
         });
         //
-         // delete tag
-         btnTagDeleteConfirmation.addEventListener('click', function(e) {
+        // delete tag
+        btnTagDeleteConfirmation.addEventListener('click', function(e) {
             // ajax request
             let url = "{{ route('delete-tag',[':id',':task']) }}";
-            url = url.replace(':id',this.id);
+            url = url.replace(':id', this.id);
             url = url.replace(':task', this.dataset.task);
             deleteTagAjax(url);
         });
@@ -288,7 +295,7 @@
                 }
             });
         }
-//
+        //
     </script>
 </body>
 

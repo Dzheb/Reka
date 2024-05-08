@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Session;
 use App\Http\Requests\ListRequest;
 use App\Models\CheckList;
 use App\Models\Task;
@@ -16,14 +16,15 @@ class ListController extends Controller
             $list->name = $req->input('name');
             $list->uid = Auth::user()->id;
             $list->save();
-            $data = CheckList::latest()->paginate(2);
-            return view('lists', compact('data'))->with('success', 'Лист был добавлен');
+            $data = CheckList::orderBy('id')->latest()->paginate(2);
+            Session::flash('success', 'Список был добавлен');
+            return redirect()->route('lists', compact('data'));
     }
     public function updateListSubmit($id, ListRequest $req)
     {
         $list = CheckList::find($id);
         $list->name = $req->input('name');
-        return redirect()->route('list-data-one', $id)->with('success', 'Иформация была обновлена');
+        return redirect()->route('list-data-one', $id)->with('success', 'Информация была обновлена');
     }
     public function allLists()
     {
@@ -43,6 +44,8 @@ class ListController extends Controller
     {
         CheckList::find($id)->delete();
         Task::where('lid', $id)->delete();
-        return redirect()->route('lists')->with('success', 'Список был удален');
+        $data = CheckList::orderBy('id')->latest()->paginate(2);
+        Session::flash('success', 'Список был удален');
+        return redirect()->route('lists',compact('data'));
     }
 }

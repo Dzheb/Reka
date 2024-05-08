@@ -8,8 +8,8 @@
 </div>
 @endforeach
 <div class="d-flex m-3 float-end">
-        {!! $data->links() !!}
-    </div>
+    {!! $data->links() !!}
+</div>
 @endsection
 @section('aside')
 <div class="d-flex flex-column bd-highlight mb-3 float-end">
@@ -19,6 +19,5 @@
         <!-- Button trigger modal -->
         <a href="{{ route('add-list') }}" class="btn btn-warning">Новый список</a>
     </div>
-
 </div>
 @endsection
