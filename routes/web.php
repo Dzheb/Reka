@@ -28,8 +28,7 @@ Route::get('/home', function () {
     return view('home',['user' => $user]);
 })->name('home');
 
-Route::get('/list
-_add', function () {
+Route::get('/list_add', function () {
     return view('add-list',['uid' => Auth::user()->id]);
 })->middleware('auth')->name('add-list');
 
