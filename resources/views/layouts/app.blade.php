@@ -123,6 +123,7 @@
                     processData: false,
                     contentType: false,
                     success: function(data) {
+                        alert(JSON.stringify(data))
                         window.location.href = "/list/" + lid + "/view";
                         document.forms.formTask.lid.value = '';
                         document.forms.formTask.task_content.value = '';
@@ -224,6 +225,11 @@
         }
         //#picModal поместить фото
         $(".photo").on("click", function(event) {
+            $('.photo_modal').attr("src", this.src);
+        });
+        //#picModal заменить фото
+        $(".save_pic").on("click", function(event) {
+            alert("Замена")
             $('.photo_modal').attr("src", this.src);
         });
 

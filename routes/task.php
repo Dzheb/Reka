@@ -6,7 +6,12 @@ use App\Http\Controllers\TaskController;
 | Web Routes
 */
 //delete one task
-
+// delete unused tags
+Route::get(
+    '/tags/delete',
+    [TaskController::class, 'deleteTagsUnused']
+)->name('delete-task');
+    //
 Route::delete(
     '/task/{id}',
     [TaskController::class, 'deleteTask']

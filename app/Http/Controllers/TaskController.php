@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -21,8 +22,11 @@ class TaskController extends Controller
             }
         }
         $task->save();
+        session()->put('test', 'value');
+        $data = session()->all();
         return response()->json([
-            "status" => "Задача добавлена"
+            "status" => "Задача добавлена",
+            "session" => $data
         ]);
     }
     //
@@ -63,6 +67,22 @@ class TaskController extends Controller
             "status" => "Задача удалёна",
         ]);
     }
+    // deleteTagsUnused
+    public function deleteTagsUnused()
+    {
+         $tags = DB::table('tags')->get();
+         foreach ($tags as $tag) {
+            $data = DB::table('tag_task')->where('tag_id', '=', $tag->id)->count();
+            if($data < 1){
+                DB::table('tags')->delete($tag->id);
+            }
+         }
+        $tags = DB::table('tags')->get();
+        return response()->json([
+            "data" => $tags
+        ]);
+    }
+    //
     public function deleteTag($id,$task_id)
     {
         $tag = Tag::find($id);
