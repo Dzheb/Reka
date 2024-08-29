@@ -25,6 +25,8 @@
     <h6>Тэги: </h6>
     <!--  -->
     @if (count($task->tags) > 0)
+    <h3>Месяц + 3 :{{now()->addMonths(3)}}</h3>
+    <div>{{json_encode($filter)}}</div>
     @foreach($task->tags as $tag)
     <button id="{{$tag->id}}" class="btn btn-warning mx-3 tag"
     data-task="{{$task->id}}"
@@ -70,6 +72,38 @@
                         <label for="task">Описание задачи:</label>
                         <textarea class="form-control" rows="5" id="task" name="task_content"></textarea>
                     </div>
+                    <div class="col-md-12">
+                        <label for="task_pic">Картинка задачи:</label>
+                        <input type="file" name="task_pic" value="" class="form-control url_img" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-dismiss="modal">
+                    Закрыть
+                </button>
+                <button class="btn btn-warning save_task">
+                    Отправить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Замена картинки задачи -->
+<div class="modal fade" id="imageReplaceModal" tabindex="-1" aria-labelledby="imageReplaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="commentModalLabel">Замена</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" enctype="multipart/form-data" name="formimageReplace" class="row md-12 image_input">
+                    @csrf
+                    <input type="hidden" id="lid" name="lid" value="" />
+                    <input type="hidden" id="id" name="id" value="" />
+
+
                     <div class="col-md-12">
                         <label for="task_pic">Картинка задачи:</label>
                         <input type="file" name="task_pic" value="" class="form-control url_img" />
