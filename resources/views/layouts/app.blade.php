@@ -120,6 +120,7 @@
                     type: "POST",
                     url: "{{ route('post-task') }}",
                     data: formData,
+                    dataType: "json",
                     processData: false,
                     contentType: false,
                     success: function(data) {
@@ -129,7 +130,7 @@
                         document.forms.formTask.task_content.value = '';
                     }
                 });
-                // если нет то update
+                // если есть то update
             } else {
                 // update
                 let url = "{{ route('put-task',':id') }}";
@@ -139,8 +140,10 @@
                     url: url,
                     data: formData,
                     processData: false,
+                    dataType: "json",
                     contentType: false,
                     success: function(data) {
+                        // alert(JSON.stringify(data))
                         window.location.href = "/list/" + lid + "/view";
                         document.forms.formTask.lid.value = '';
                         document.forms.formTask.id.value = '';
@@ -167,6 +170,7 @@
                 url: "{{ route('post-tag') }}",
                 data: formData,
                 processData: false,
+                dataType: "json",
                 contentType: false,
                 success: function(data) {
                     location.reload();
@@ -196,7 +200,8 @@
                 type: 'DELETE',
                 dataType: 'json',
                 success: function(data) {
-                    window.location.href = "/list/" + document.getElementById('list').dataset.id + "/view";
+                    location.reload();
+                    // window.location.href = "/list/" + document.getElementById('list').dataset.id + "/view";
                 }
             });
         }
