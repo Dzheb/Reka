@@ -25,8 +25,8 @@
     <h6>Тэги: </h6>
     <!--  -->
     @if (count($task->tags) > 0)
-    <h3>Месяц + 3 :{{now()->addMonths(3)}}</h3>
-    <div>{{json_encode($filter)}}</div>
+    <!-- <h3>Месяц + 3 :{{now()->addMonths(3)}}</h3> -->
+    <!-- <div>{{json_encode($filter)}}</div> -->
     @foreach($task->tags as $tag)
     <button id="{{$tag->id}}" class="btn btn-warning mx-3 tag"
     data-task="{{$task->id}}"
