@@ -8,16 +8,23 @@
     <title>@yield('title-block')</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js">
-    </script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    @stack('scripts')
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js">
+    </script> -->
+
+    <!-- <script src="{{ asset('js/bootstrap.min.js') }}" defer></script> -->
+
+    <!-- </body> -->
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous"> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
+
+    <!-- <script src="{{ asset('js/app.js') }}" defer></script>
+    @stack('scripts') -->
 </head>
 
 <body class="p-3 mb-2">
@@ -29,8 +36,8 @@
                 @include('inc.aside')
             </div>
             <div class="col-sm-12 col-md-8 col-lg-7">
-            @include('inc.flashMessages')
-            @yield('content')
+                @include('inc.flashMessages')
+                @yield('content')
             </div>
         </div>
     </div>
@@ -308,6 +315,10 @@
         }
         //
     </script>
+    <!--  -->
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+   <script src="{{ asset('js/app.js') }}" defer></script>
+   @stack('scripts')
 </body>
 
 </html>
